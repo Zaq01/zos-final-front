@@ -55,7 +55,6 @@
 <style lang="less" scoped>
 
   .header_{
-    background-color: #0a1c1c;
     .el-dropdown{
       display: inline;
       float: right;

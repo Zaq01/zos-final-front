@@ -43,6 +43,6 @@ margin: 0;
 height: 100%;
 }
   body{
-    background-color: #0a1c1c;
+    background-color: #102e2e;
   }
 </style>

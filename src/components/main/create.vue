@@ -136,7 +136,7 @@
                     alert("创建数据集成功");
                   }
                 }).catch(() => {
-                  alert('接口异常！');
+                  alert('数据集命名重复或者请求超时，请更换命名重试！');
                 })
               }else{
                 return false;
@@ -149,7 +149,7 @@
 
 <style lang="less" scoped>
   .main_{
-    background-color: #0a1c1c;
+    /*background-color: #0a1c1c;*/
     filter: Alpha(opacity=80);
     position: static;
     *zoom:1;

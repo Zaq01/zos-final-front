@@ -8,7 +8,8 @@
           v-model="input"></el-input>
       </el-col>
       <el-col :span="5">
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch"></el-button>
+        <el-button type="primary" icon="el-icon-search" @click="handleSearch" class="search_btn"></el-button>
+        <el-button type="primary" @click="toCreate()" class="create_dataset">创建数据集</el-button>
       </el-col>
     </el-row>
 
@@ -68,8 +69,7 @@
       inject: ['reload'],
       methods:{
         handleSearch: function(){
-          console.log(111111111111)
-          this.loading = true
+          this.loading = true;
           this.$axios({
             method: 'get',
             url: '/dataset',
@@ -86,15 +86,18 @@
                  this.$store.state.dataset_page[i] = response.data[i];
                }
                this.$router.go(0)
-
              }
           }).catch((err) => {
             console.log(err);
-            alert("接口异常")
+            alert("请求超时，请重试")
+          })
+        },
+        toCreate:function(){
+          this.$router.push({
+            path: '/create'
           })
         },
         getDetail: function(index){
-          console.log(2222222222222222222222222)
           console.log(index);
           this.$store.state.dataset_detail = index;
           this.$router.push({
@@ -131,11 +134,10 @@
               }
             }
           }).catch(() => {
-            alert("接口异常！");
+            alert("请求失败，请重试！");
           })
         },
         getDataset:function(name, type){
-          console.log(4444444444444444444444444)
           if(type === 'PO'||type==='PO-E'){
             this.$router.push({
               path: `/member/${name}`
@@ -150,26 +152,26 @@
                 path: `/edit/${name}`
               })
             }).catch(() => {
-              alert("接口异常！");
+              alert("请求失败，请重试！");
             });
           }
         },
         handleSizeChange(val){},
         handleCurrentChange(val){
-        //   if(this.$store.state.dataset.length <= 10){
-        //     this.$store.state.dataset_page = this.$store.state.dataset;
-        //   }
-        //   else{
-        //     for(let i = 0; i < 10; i++){
-        //       if((i + (this.currentPage-1)*10) < this.$store.state.dataset.length){
-        //         this.$store.state.dataset_page[i] = this.$store.state.dataset[i + (this.currentPage-1)*10];
-        //       }else{
-        //         this.$store.state.dataset_page.pop();
-        //       }
-        //     }
-        //   }
-        //   console.log(this.$store.state.dataset_page);
-        //   this.reload();
+          if(this.$store.state.dataset.length <= 10){
+            this.$store.state.dataset_page = this.$store.state.dataset;
+          }
+          else{
+            for(let i = 0; i < 10; i++){
+              if((i + (this.currentPage-1)*10) < this.$store.state.dataset.length){
+                this.$store.state.dataset_page[i] = this.$store.state.dataset[i + (this.currentPage-1)*10];
+              }else{
+                this.$store.state.dataset_page.pop();
+              }
+            }
+          }
+          console.log(this.$store.state.dataset_page);
+          this.reload();
        }
       }
     }
@@ -178,7 +180,7 @@
 <style lang="less" scoped>
 
   .main_{
-    background-color: #0a1c1c;
+    /*background-color: #0a1c1c;*/
     filter: Alpha(opacity=10);
     position: static;
     *zoom:1;
@@ -206,6 +208,8 @@
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
+    color: orangered;
+    font-size: 16px;
   }
   .el-button{
     -webkit-border-radius: 0;
@@ -215,10 +219,11 @@
     border: 0;
     width: 50px;
     height: 50px;
+    font-size: 16px;
   }
   .dataset_detail{
     margin-top: 100px;
-    margin-left: 300px;
+    margin-left: 400px;
     width: 50%;
     .el-row{
       border-bottom: 1px solid #909090;
@@ -256,7 +261,7 @@
 
   }
   .pagination /deep/ .el-input__inner{
-    background-color: #0a1c1c;
+    background-color: #102e2e;
     color: white;
     font-size: 16px;
     border-bottom: 1px solid #ffffff;
@@ -265,12 +270,21 @@
     border-right: 0;
   }
   .pagination /deep/ .el-pager li{
-    background-color: #0a1c1c;
+    background-color: #102e2e;
   }
   .pagination /deep/ button{
-    background-color: #0a1c1c;
+    background-color: #102e2e;
   }
   .pagination /deep/ button:disabled{
+    color: orangered;
+  }
+  .create_dataset:hover{
+    color: orangered;
+  }
+  .search_btn{
+    width: 80px;
+  }
+  .search_btn:hover{
     color: orangered;
   }
 </style>

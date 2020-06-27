@@ -62,16 +62,14 @@
       },
       methods: {
           get_member_list: function(){
-            console.log(this.$route.params.name);
             this.$axios({
               method: 'get',
               url: '/dataset/'+this.$route.params.name+'/member',
             }).then((response) => {
-              console.log(response);
+              // console.log(response);
               this.member_list = response.data;
-            }).catch((error) => {
-              console.log(error);
-              alert("接口异常！");
+            }).catch(() => {
+              alert("请求超时，请重试！");
             })
           },
         open(item) {
@@ -95,7 +93,7 @@
             }
           }).catch((error) => {
             console.log(error);
-            alert("接口异常！");
+            alert("请求失败，请重试！");
           })
         },
         create_dataset:function(){
@@ -111,7 +109,7 @@
               }
             }).catch((error) => {
               console.log(error);
-              alert("接口异常!");
+              alert("未填写完整参数或者上传修改错误，请重试或者填写完整!");
           })
         },
         get_member_detail: function(member){
@@ -124,7 +122,7 @@
               path: `/edit/${this.$route.params.name}(${member})`
             });
           }).catch(() => {
-            alert("接口异常!");
+            alert("请求超时，请重试!");
           });
         }
       },
@@ -133,7 +131,6 @@
 
 <style lang="less" scoped>
   .main_{
-    background-color: #0a1c1c;
     background-size: cover;
     filter: Alpha(opacity=80);
     position: static;
@@ -182,6 +179,7 @@
     border: 0;
     width: 50px;
     height: 50px;
+    font-size: 16px;
   }
   .member_btn{
     width: 30%;
@@ -211,5 +209,12 @@
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
+  }
+
+  .bread /deep/ .el-breadcrumb__inner{
+    color: white
+  }
+  .bread /deep/ .el-breadcrumb__inner:hover{
+    color: orangered;
   }
 </style>

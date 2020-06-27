@@ -69,7 +69,7 @@
             this.$store.state.code = response.data;
             console.log(response.data);
           }).catch(() => {
-            alert("接口异常!");
+            alert("请求超时，请重试!");
           });
         },
         submit_edit:function(){
@@ -125,6 +125,13 @@
     .el-button:hover{
       color: orangered;
     }
+  }
+
+  .bread /deep/ .el-breadcrumb__inner{
+    color: white
+  }
+  .bread /deep/ .el-breadcrumb__inner:hover{
+    color: orangered;
   }
 
 </style>

@@ -125,5 +125,11 @@
       width: 100%;
     }
   }
+  .bread /deep/ .el-breadcrumb__inner{
+    color: white
+  }
+  .bread /deep/ .el-breadcrumb__inner:hover{
+    color: orangered;
+  }
 
 </style>
