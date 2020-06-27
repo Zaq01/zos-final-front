@@ -1,23 +1,48 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
     <router-view/>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  created () {
+    if (sessionStorage.getItem("store") ) {
+      this.$store.replaceState(Object.assign({}, this.$store.state,JSON.parse(sessionStorage.getItem("store"))))
+    }
+    window.addEventListener("beforeunload",()=>{
+      sessionStorage.setItem("store",JSON.stringify(this.$store.state))
+    })
+  },
+  data(){
+    return{
+      isRouterAlive: true
+    }
+  },
+  provide(){
+    return{
+      reload: this.reload
+    }
+  },
+  methods: {
+    reload(){
+      this.isRouterAlive = false;
+      this.$nextTick( function () {
+        this.isRouterAlive = true
+      })
+    }
+  }
 }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style lang="less">
+html, body, #app, .el-container {
+padding: 0;
+margin: 0;
+height: 100%;
 }
+  body{
+    background-color: #0a1c1c;
+  }
 </style>
