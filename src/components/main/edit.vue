@@ -83,7 +83,7 @@
               this.reload();
             }
           }).catch(() => {
-            alert('接口异常');
+            alert('未发现更改');
           });
         }
       }

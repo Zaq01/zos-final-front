@@ -12,7 +12,7 @@
       </el-col>
     </el-row>
 
-    <div class="dataset_detail" v-if="$store.state.dataset.length">
+    <div class="dataset_detail" v-if="$store.state.dataset.length"  v-loading="loading"    element-loading-background="rgba(0, 0, 0, 0.4)">
         <el-row :gutter="10" v-for="(item, index) in $store.state.dataset_page" :key="index">
           <el-col :span="1">
             <span class="dts_num">{{index + (currentPage-1)*10}}</span>
@@ -27,9 +27,9 @@
             <el-button @click="getDataset(item.dsname, item.dsorg)">编辑</el-button>
           </el-col>
           <el-col :span="3">
-            <el-button @click="delete_dataset(item.dsname)">删除</el-button>
+            <el-button @click="open(item.dsname)">删除</el-button>
           </el-col>
-          <el-col :span="1" v-if="item.dsorg === 'PO'" class="PDS_down">
+          <el-col :span="1" v-if="item.dsorg === 'PO'||item.dsorg==='PO-E'" class="PDS_down">
             <el-button @click="toMember(item.dsname)"><i class="el-icon-arrow-right"></i></el-button>
           </el-col>
         </el-row>
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+  import { Loading } from 'element-ui'
   import header_ from './header'
     export default {
         name: "main_",
@@ -56,16 +57,19 @@
             input: '',
             pageSize: 9,
             currentPage: 1,
+            loading: true
           }
       },
       components:{
           header_
       },
-      created: function(){},
+      created: function(){this.loading=false},
       updated: function(){},
       inject: ['reload'],
       methods:{
         handleSearch: function(){
+          console.log(111111111111)
+          this.loading = true
           this.$axios({
             method: 'get',
             url: '/dataset',
@@ -76,29 +80,42 @@
             console.log(response);
             this.$store.state.dataset = response.data;
             if(response.data.length <= 10){
-              this.$store.state.dataset_page = response.data;
-            }else{
-              for(let i = 0; i < 10; i++){
-                this.$store.state.dataset_page[i] = response.data[i];
-              }
-            }
+               this.$store.state.dataset_page = response.data;
+             }else{
+               for(let i = 0; i < 10; i++){
+                 this.$store.state.dataset_page[i] = response.data[i];
+               }
+               this.$router.go(0)
+
+             }
           }).catch((err) => {
             console.log(err);
             alert("接口异常")
           })
         },
         getDetail: function(index){
+          console.log(2222222222222222222222222)
           console.log(index);
           this.$store.state.dataset_detail = index;
           this.$router.push({
             path: `/detail/${index.dsname}`
           })
         },
+
         toMember: function(name){
           this.$router.push({
             path:`/member/${name}`
           })
         },
+         open(name) {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.delete_dataset(name);
+        })
+      },
         delete_dataset:function(name){
           this.$axios({
             method: 'delete',
@@ -118,7 +135,8 @@
           })
         },
         getDataset:function(name, type){
-          if(type === 'PO'){
+          console.log(4444444444444444444444444)
+          if(type === 'PO'||type==='PO-E'){
             this.$router.push({
               path: `/member/${name}`
             })
@@ -138,32 +156,40 @@
         },
         handleSizeChange(val){},
         handleCurrentChange(val){
-          if(this.$store.state.dataset.length <= 10){
-            this.$store.state.dataset_page = this.$store.state.dataset;
-          }
-          else{
-            for(let i = 0; i < 10; i++){
-              if((i + (this.currentPage-1)*10) < this.$store.state.dataset.length){
-                this.$store.state.dataset_page[i] = this.$store.state.dataset[i + (this.currentPage-1)*10];
-              }else{
-                this.$store.state.dataset_page.pop();
-              }
-            }
-          }
-          console.log(this.$store.state.dataset_page);
-          this.reload();
-        }
+        //   if(this.$store.state.dataset.length <= 10){
+        //     this.$store.state.dataset_page = this.$store.state.dataset;
+        //   }
+        //   else{
+        //     for(let i = 0; i < 10; i++){
+        //       if((i + (this.currentPage-1)*10) < this.$store.state.dataset.length){
+        //         this.$store.state.dataset_page[i] = this.$store.state.dataset[i + (this.currentPage-1)*10];
+        //       }else{
+        //         this.$store.state.dataset_page.pop();
+        //       }
+        //     }
+        //   }
+        //   console.log(this.$store.state.dataset_page);
+        //   this.reload();
+       }
       }
     }
 </script>
 
 <style lang="less" scoped>
+
   .main_{
     background-color: #0a1c1c;
-    filter: Alpha(opacity=80);
+    filter: Alpha(opacity=10);
     position: static;
     *zoom:1;
     height: 100%;
+  }
+  .body {
+    margin: 0;
+  }
+  body {
+    margin: 0;
+    opacity: 0.4;
   }
   .search{
     width: 800px;

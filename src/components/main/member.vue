@@ -22,7 +22,7 @@
           <el-button @click="get_member_detail(item)">编辑</el-button>
         </el-col>
         <el-col :span="5">
-          <el-button @click="delete_member(item)">删除</el-button>
+          <el-button @click="open(item)">删除</el-button>
         </el-col>
       </el-row>
     </div>
@@ -74,6 +74,15 @@
               alert("接口异常！");
             })
           },
+        open(item) {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.delete_member(item);
+        })
+      },
         delete_member: function(item){
           this.$axios({
             method: 'delete',
@@ -82,6 +91,7 @@
             if(response.status === 200 && response.data === 'successful'){
               alert("删除成功");
               this.reload();
+              this.$router.go(0)
             }
           }).catch((error) => {
             console.log(error);
