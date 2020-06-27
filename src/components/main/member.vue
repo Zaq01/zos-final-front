@@ -22,7 +22,7 @@
           <el-button @click="get_member_detail(item)">编辑</el-button>
         </el-col>
         <el-col :span="5">
-          <el-button @click="delete_member(item)">删除</el-button>
+          <el-button @click="open_alert(item)">删除</el-button>
         </el-col>
       </el-row>
     </div>
@@ -65,11 +65,9 @@
               method: 'get',
               url: '/dataset/'+this.$route.params.name+'/member',
             }).then((response) => {
-              console.log(response);
               this.member_list = response.data;
-            }).catch((error) => {
-              console.log(error);
-              alert("接口异常！");
+            }).catch(() => {
+              alert("请求超时，请重试！");
             })
           },
         delete_member: function(item){
@@ -81,9 +79,17 @@
               alert("删除成功");
               this.$router.go(0)
             }
-          }).catch((error) => {
-            console.log(error);
-            alert("接口异常！");
+          }).catch(() => {
+            alert("请求失败，请重试！");
+          })
+        },
+        open_alert:function(name){
+          this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+          }).then(() => {
+            this.delete_member(name);
           })
         },
         create_dataset:function(){
@@ -95,12 +101,11 @@
               console.log(response);
               if(response.status ===200){
                 alert("创建成功！");
-              this.$router.go(0)
+                this.$router.go(0);
               }
-            }).catch((error) => {
-              console.log(error);
-              alert("创建成功!");
-             this.$router.go(0)
+          }).catch(() => {
+              alert("请求失败，请重试!");
+              this.$router.go(0);
           })
         },
         get_member_detail: function(member){
@@ -113,7 +118,7 @@
               path: `/edit/${this.$route.params.name}(${member})`
             });
           }).catch(() => {
-            alert("接口异常!");
+            alert("请求超时，请重试!");
           });
         }
       },
@@ -122,7 +127,7 @@
 
 <style lang="less" scoped>
   .main_{
-    background-color: #0a1c1c;
+    /*background-color: #0a1c1c;*/
     background-size: cover;
     filter: Alpha(opacity=80);
     position: static;
@@ -171,6 +176,7 @@
     border: 0;
     width: 50px;
     height: 50px;
+    font-size: 16px;
   }
   .member_btn{
     width: 30%;
@@ -183,6 +189,7 @@
       border-top: 0;
       border-left: 0;
       border-right: 0;
+      font-size: 16px;
     }
     .el-button:hover{
       color: orangered;
@@ -200,5 +207,11 @@
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
+  }
+  .bread /deep/ .el-breadcrumb__inner{
+    color: white;
+  }
+  .bread /deep/ .el-breadcrumb__inner:hover{
+    color: orangered;
   }
 </style>
